@@ -1,0 +1,22 @@
+- type: replace
+  path: /releases/-
+  value:
+    name: openldap
+    url: /Users/dennisleon/workspace/openldap-boshrelease
+    version: create
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: ldap-server
+    instances: 1
+    azs: [z1, z2, z3]
+    vm_type: default
+    stemcell: default
+    persistent_disk: 500
+    networks:
+    - name: default
+    jobs:
+      - name: ldap-server
+        release: openldap
+
