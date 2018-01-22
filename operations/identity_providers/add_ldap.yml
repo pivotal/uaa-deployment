@@ -1,3 +1,5 @@
+---
+
 - type: replace
   path: /releases/-
   value:
@@ -19,4 +21,3 @@
     jobs:
       - name: ldap-server
         release: openldap
-
