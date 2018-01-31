@@ -21,3 +21,71 @@
     jobs:
       - name: ldap-server
         release: openldap
+        properties:
+          ldap:
+            olcSuffix: 'dc=support,dc=pivotal'
+            olcRootDN: 'cn=test,cn=Users,dc=support,dc=pivotal'
+            olcRootPW: ((ldap_password))
+            configDatabasePW: ((ldap_password))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim?
+  value:
+      external_groups:
+        - cloud_controller.admin|CN=pcfgroup,OU=testou,DC=support,DC=pivotal
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/ldap?
+  value:
+      enabled: true
+      mailAttributeName: mail
+      mailSubstitute: ""
+      mailSubstituteOverridesLdap: false
+      referral: follow
+      searchBase: 'dc=support,dc=pivotal'
+      searchFilter: 'cn={0}'
+      url: 'ldap://ldap-server.service.cf.internal'
+      userDN: 'cn=test,cn=Users,dc=support,dc=pivotal'
+      userPassword: ((ldap_password))
+      groups:
+        profile_type: groups-map-to-scopes
+        groupRoleAttribute: 'spring.security.ldap.dn'
+        groupSearchFilter: 'member={0}'
+        maxSearchDepth: 10
+        searchBase: 'dc=support,dc=pivotal'
+        searchSubtree: true
+      profile_type: search-and-bind
+
+- type: replace
+  path: /addons?/-
+  value:
+    include:
+      stemcell:
+      - os: ubuntu-trusty
+    jobs:
+    - name: bosh-dns
+      properties:
+        aliases:
+          ldap-server.service.uaa.internal:
+          - '*.ldap-server.default.uaa.bosh'
+          uaa.service.uaa.internal:
+          - '*.uaa.default.uaa.bosh'
+      release: bosh-dns
+    name: bosh-dns
+
+- type: replace
+  path: /releases/-
+  value:
+    name: bosh-dns
+    sha1: 9231b7c7d2f6aa85e0cb77fdeef7add54fdb3f1a
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=0.2.0
+    version: 0.2.0
+    ssl:
+      skipverification: true
+
+
+- type: replace
+  path: /variables?/-
+  value:
+    name: ldap_password
+    type: password
