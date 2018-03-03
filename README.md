@@ -30,7 +30,7 @@ popd
 
 # Deploy uaa
 ```
-bosh -e vbox -d uaa deploy bosh-lite-uaa-release.yml \
+bosh -e vbox -d uaa deploy uaa.yml \
   -o operations/use-bosh-dns.yml \
   --no-redact
 sudo -E ./configure-host.sh
@@ -38,7 +38,7 @@ sudo -E ./configure-host.sh
 
 # Deploy uaa with ldap
 ```
-bosh -e vbox -d uaa deploy bosh-lite-uaa-release.yml \
+bosh -e vbox -d uaa deploy uaa.yml \
   -o operations/use-bosh-dns.yml \
   -o operations/identity_providers/add_ldap.yml \
   --vars-store=./store.json \
