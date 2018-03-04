@@ -4,7 +4,7 @@
   path: /releases/-
   value:
     name: openldap
-    url: /Users/dennisleon/workspace/openldap-boshrelease
+    url: /tmp/openldap-boshrelease
     version: create
 
 - type: replace

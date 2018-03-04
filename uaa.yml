@@ -115,9 +115,8 @@ variables:
 
 releases:
 - name: uaa
-  url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=53.1
-  version: "53.1"
-  sha1: b49b0caaf46d8f94d67979f9e46d9c22907bd451
+  url: https://bosh.io/d/github.com/cloudfoundry/uaa-release
+  version: latest
 
 
 stemcells:

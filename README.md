@@ -21,10 +21,8 @@ If you're planning to deploy against a **local** bosh-lite,
 follow [these instructions](https://bosh.io/docs/bosh-lite.html).
 You'll also need to take the following step before continuing:
 ```
-mkdir -p ~/workspace
-pushd ~/workspace
+pushd /tmp
   git clone https://github.com/DennisDenuto/openldap-boshrelease.git
-  git clone https://github.com/cloudfoundry/uaa.git
 popd
 ```
 
