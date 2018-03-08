@@ -30,6 +30,7 @@ popd
 ```
 bosh -e vbox -d uaa deploy uaa.yml \
   -o operations/use-bosh-dns.yml \
+  --vars-store=./store.json \
   --no-redact
 sudo -E ./configure-host.sh
 ```
