@@ -23,6 +23,7 @@ You'll also need to take the following step before continuing:
 ```
 pushd /tmp
   git clone https://github.com/DennisDenuto/openldap-boshrelease.git
+  git clone https://github.com/DennisDenuto/saml-release.git
 popd
 ```
 
@@ -40,6 +41,17 @@ sudo -E ./configure-host.sh
 bosh -e vbox -d uaa deploy uaa.yml \
   -o operations/use-bosh-dns.yml \
   -o operations/identity_providers/add_ldap.yml \
+  --vars-store=./store.json \
+  --no-redact
+sudo -E ./configure-host.sh
+```
+
+# Deploy uaa with saml
+```
+bosh -e vbox -d uaa deploy uaa.yml \
+  -o operations/use-bosh-dns.yml \
+  -o operations/identity_providers/add_saml.yml \
+  -v saml_entity_id=mynewentityid \
   --vars-store=./store.json \
   --no-redact
 sudo -E ./configure-host.sh
