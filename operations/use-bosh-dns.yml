@@ -10,6 +10,8 @@
     - name: bosh-dns
       properties:
         aliases:
+          saml.service.uaa.internal:
+          - '*.saml.default.uaa.bosh'
           ldap-server.service.uaa.internal:
           - '*.ldap-server.default.uaa.bosh'
           uaa.service.uaa.internal:
