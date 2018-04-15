@@ -56,6 +56,16 @@ bosh -e vbox -d uaa deploy uaa.yml \
 sudo -E ./configure-host.sh
 ```
 
+# Deploy uaa with oidc
+```
+bosh -e vbox -d uaa deploy uaa.yml \
+  -o operations/use-bosh-dns.yml \
+  -o operations/identity_providers/add_oidc.yml \
+  --vars-store=./store.json \
+  --no-redact
+sudo -E ./configure-host.sh
+```
+
 # Testing uaa standalone deployment
 1) uaac target https://uaa-minimal.bosh-lite.com:8443
 
