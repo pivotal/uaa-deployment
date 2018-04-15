@@ -23,6 +23,8 @@ instance_groups:
   jobs:
   - name: uaa_postgres
     release: uaa
+    provides:
+      postgres: {as: idp_postgres}
     properties:
       postgres:
         address: 127.0.0.1
@@ -38,6 +40,8 @@ instance_groups:
 
   - name: uaa
     release: uaa
+    consumes:
+      database: {from: idp_postgres}
     properties:
       uaadb:
         databases:
@@ -61,8 +65,8 @@ instance_groups:
         sslPrivateKey: ((uaa_tls.private_key))
         clients:
           admin:
-            authorized-grant-types: authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer
-            redirect-uri: http://login.example.com
+            authorized-grant-types: authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer,implicit
+            redirect-uri: https://google.com
             scope: uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,uaa.user
             authorities: uaa.admin,clients.admin
             secret: adminsecret

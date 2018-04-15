@@ -16,6 +16,8 @@
           - '*.ldap-server.default.uaa.bosh'
           uaa.service.uaa.internal:
           - '*.uaa.default.uaa.bosh'
+          uaa-oidc.service.uaa.internal:
+          - '*.uaa-oidc.default.uaa.bosh'
       release: bosh-dns
     name: bosh-dns
 
