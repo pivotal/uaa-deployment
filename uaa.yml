@@ -50,7 +50,7 @@ instance_groups:
           password: admin
           tag: admin
       uaa:
-        url: https://uaa-minimal.bosh-lite.com:8443
+        url: https://uaa.service.uaa.internal:8443
         jwt:
           policy:
             active_key_id: key-1
@@ -61,7 +61,7 @@ instance_groups:
         sslPrivateKey: ((uaa_tls.private_key))
         clients:
           admin:
-            authorized-grant-types: authorization_code,client_credentials,refresh_token,user_token,password
+            authorized-grant-types: authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer
             redirect-uri: http://login.example.com
             scope: uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,uaa.user
             authorities: uaa.admin,clients.admin
