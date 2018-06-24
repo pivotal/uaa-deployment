@@ -59,6 +59,13 @@
       consumes:
         database: {from: oidc_database}
       properties:
+        encryption:
+          active_key_label: 'key-1'
+          encryption_keys:
+            - label: 'key-1'
+              passphrase: 'MY-PASSPHRASE'
+            - label: 'key-2'
+              passphrase: 'MY-PASSPHRASE-TWO'
         uaadb:
           databases:
           - name: uaadb
