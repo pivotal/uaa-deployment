@@ -94,3 +94,11 @@ bosh -e vbox -d uaa errands
 bosh -e vbox -d uaa run-errand add-dn
 uaac token owner get admin belle -s adminsecret -p koala
 ```
+
+# Testing uaa oidc integration with another uaa
+```
+curl -v -k 'https://uaa.service.uaa.internal:8443/oauth/token' -i -X POST \
+    -H 'Content-Type: application/x-www-form-urlencoded' \
+    -H 'Accept: application/json' \
+    -d 'client_id=admin&client_secret=adminsecret&grant_type=password&username=marissa_oidc&password=koala&token_format=jwt&response_type=token&login_hint=%257B%2522origin%2522%253A%2522my-oidc-provider%2522%257D'
+```

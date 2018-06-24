@@ -26,11 +26,11 @@
         family_name: family_name
         user_name: user_name
         external_groups:
-          - <attribute holding roles or group memberships in the OIDC id_token>
-          - <other attribute holding roles or group memberships in the OIDC id_token>
+          - groups
+          - scope
         user:
           attribute:
-            name-of-attribute-in-uaa-id-token: name-of-attribute-in-provider-token
+            oidc_externalId: externalId
             name-of-other-attribute-in-uaa-id-token: name-of-other-attribute-in-provider-token
 
 - type: replace
