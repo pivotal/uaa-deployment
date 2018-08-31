@@ -14,6 +14,7 @@
       relyingPartySecret: adminsecret
       skipSslValidation: true
       storeCustomAttributes: true
+      passwordGrantEnabled: true
       attributeMappings:
         given_name: given_name
         family_name: family_name
