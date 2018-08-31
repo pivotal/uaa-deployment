@@ -1,11 +1,9 @@
 ---
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/admin/allowedproviders?
-  value: my-oidc-provider
-
-- type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/admin/authorized-grant-types
-  value: urn:ietf:params:oauth:grant-type:jwt-bearer,authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer,implicit
+  value:
+    - my-oidc-provider
+    - uaa
 
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/oauth?/providers?
