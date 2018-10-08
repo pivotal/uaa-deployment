@@ -65,6 +65,16 @@ bosh -e vbox -d uaa deploy uaa.yml \
   --no-redact
 sudo -E ./configure-host.sh
 ```
+# Deploy uaa with Google oidc
+Follow instructions for configuring your Google API account here: https://developers.google.com/identity/protocols/OpenIDConnect
+
+```
+bosh -e vbox -d uaa deploy uaa.yml \
+  -o operations/identity_providers/add_google_oidc.yml \
+  --vars-store=./store.json \
+  --no-redact
+sudo -E ./configure-host.sh
+```
 
 # Testing uaa standalone deployment
 1) uaac target https://uaa-minimal.bosh-lite.com:8443
