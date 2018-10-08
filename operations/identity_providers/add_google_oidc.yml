@@ -1,0 +1,20 @@
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/oauth?
+  value:
+    providers:
+     my-google-oidc:
+       type: "oidc1.0"
+       discoveryUrl: https://accounts.google.com/.well-known/openid-configuration
+       relyingPartyId: ((oidc_client_id))
+       relyingPartySecret: ((oidc_client_secret))
+       scopes:
+         - openid
+         - email
+       addShadowUserOnLogin: true
+       passwordGrantEnabled: true
+       linkText: My Google OIDC provider
+       showLinkText: true
+       clientAuthInBody: true
+       attributeMappings:
+         user_name: email
+
