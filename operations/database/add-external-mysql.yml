@@ -1,0 +1,56 @@
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa_postgres
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/consumes
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/db_scheme
+  value: mysql
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/port
+  value: 3306
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/databases/tag=uaa/name
+  value: ((external_uaa_database_name))
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/address?
+  value: ((external_uaa_database_address))
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/name=uaaadmin/password
+  value: ((external_uaa_database_password))
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/name=uaaadmin/name
+  value: ((external_uaa_database_username))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/ca_certs/-
+  value:
+    - |
+            <<Add server CA cert here>>
+
+- type: replace
+  path: /releases/-
+  value: 
+    name: os-conf
+    version: "latest"
+    url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/-
+  value:
+    name: pre-start-script
+    release: os-conf
+    properties:   
+      script: |
+        #!/bin/bash
+        
+        set -x
+        cat <<EOF > /tmp/client-cert
+        <<Add client cert here>>
+        EOF
+
+        cat <<EOF > /tmp/client-key
+        <<Add client key here>>
+        EOF
+
+        openssl pkcs12 -export -name database-client -in /tmp/client-cert -inkey /tmp/client-key -out /var/vcap/data/uaa/uaa_keystore.p13 -password 'pass:secret'
