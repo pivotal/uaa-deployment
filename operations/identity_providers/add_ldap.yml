@@ -4,8 +4,8 @@
   path: /releases/-
   value:
     name: openldap
-    url: /tmp/openldap-boshrelease
-    version: create
+    url: https://github.com/pivotal-cf-experimental/openldap-boshrelease/releases/download/v0.4.0/openldap-release-0.4.0.tgz
+    version: 0.4.0
 
 - type: replace
   path: /instance_groups/-

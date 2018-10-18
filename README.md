@@ -22,7 +22,6 @@ follow [these instructions](https://bosh.io/docs/bosh-lite.html).
 You'll also need to take the following step before continuing:
 ```
 pushd /tmp
-  git clone https://github.com/DennisDenuto/openldap-boshrelease.git
   git clone https://github.com/DennisDenuto/saml-release.git --recursive
 popd
 ```
