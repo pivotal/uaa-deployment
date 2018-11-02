@@ -1,0 +1,149 @@
+- type: remove
+  path: /instance_groups/name=uaa
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: database
+    azs:
+    - z1
+    instances: 3
+    vm_type: default
+    stemcell: default
+    persistent_disk: 6000
+    networks:
+    - name: default
+    jobs:
+    - name: mysql
+      release: cf-mysql
+      properties:
+        cf_mysql:
+          mysql:
+            admin_password: "admin"
+            port: 13306
+            binlog_enabled: false
+            cluster_health:
+              password: "admin"
+            galera_healthcheck:
+              db_password: "admin"
+              endpoint_username: galera_healthcheck
+              endpoint_password: "admin"
+            seeded_databases:
+            - name: uaa
+              username: uaaadmin
+              password: "admin"
+    - name: proxy
+      release: cf-mysql
+      properties:
+        cf_mysql:
+          proxy:
+            api_password: "admin"
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: uaa
+    instances: 1
+    azs: [z1, z2, z3]
+    vm_type: default
+    stemcell: default
+    persistent_disk: 500
+    networks:
+    - name: default
+    jobs:
+    - name: uaa
+      release: uaa
+      consumes:
+        database: {from: mysql-database}
+      properties:
+        encryption:
+          active_key_label: 'key-1'
+          encryption_keys:
+          - label: 'key-1'
+            passphrase: 'MY-PASSPHRASE'
+          - label: 'key-2'
+            passphrase: 'MY-PASSPHRASE-TWO'
+        uaadb:
+          databases:
+          - name: uaadb
+            tag: uaa
+          db_scheme: postgresql
+          port: 5524
+          roles:
+          - name: uaaadmin
+            password: admin
+            tag: admin
+        uaa:
+          url: https://uaa.service.uaa.internal:8443
+          jwt:
+            policy:
+              active_key_id: key-1
+              keys:
+                key-1:
+                  signingKey: ((uaa-key1.private_key))
+          sslCertificate: ((uaa_tls.certificate))
+          sslPrivateKey: ((uaa_tls.private_key))
+          clients:
+            admin:
+              authorized-grant-types: 'urn:ietf:params:oauth:grant-type:jwt-bearer,authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer,implicit'
+              redirect-uri: https://google.com
+              scope: uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,uaa.user,openid
+              authorities: uaa.admin,clients.admin
+              secret: adminsecret
+          scim:
+            user:
+              override: true
+            users:
+            - name: admin
+              password: PASSWORD
+              groups:
+              - uaa.admin
+            - name: marissa
+              password: koala
+              groups:
+              - uaa.user
+          #login:
+          #  client_secret: PASSWORD
+        login:
+          protocol: https
+          saml:
+            activeKeyId: key1
+            keys:
+              key1:
+                key: ((saml-key1.private_key))
+                passphrase: ''
+                certificate: ((saml-key1.certificate))
+
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/db_scheme
+  value: mysql
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/port
+  value: 3306
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/databases/tag=uaa/name
+  value: uaa
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/name=uaaadmin/password
+  value: admin
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/name=uaaadmin/name
+  value: uaaadmin
+
+
+- type: replace
+  path: /stemcells/alias=default/os
+  value: ubuntu-xenial
+
+- type: replace
+  path: /stemcells/alias=default/version
+  value: '97.28'
+
+- type: replace
+  path: /releases/-
+  value:
+    name: cf-mysql
+    sha1: 9101651c0e51e82399715912fbc42bcbcfa23eca
+    url: https://storage.googleapis.com/cf-deployment-compiled-releases/cf-mysql-36.15.0-ubuntu-xenial-97.18-20180925-180805-323206939.tgz
+    version: 36.15.0
