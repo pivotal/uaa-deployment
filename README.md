@@ -64,6 +64,17 @@ bosh -e vbox -d uaa deploy uaa.yml \
   --no-redact
 sudo -E ./configure-host.sh
 ```
+
+# Deploy uaa with mysql cluster
+```
+bosh -e vbox -d uaa deploy uaa.yml \
+  -o operations/use-bosh-dns.yml \
+  -o operations/database/add-managed-mysql.yml \
+  --vars-store=./store.json \
+  --no-redact
+sudo -E ./configure-host.sh
+```
+
 # Deploy uaa with Google oidc
 Follow instructions for configuring your Google API account here: https://developers.google.com/identity/protocols/OpenIDConnect
 
