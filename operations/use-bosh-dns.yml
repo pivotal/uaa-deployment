@@ -6,6 +6,7 @@
     include:
       stemcell:
       - os: ubuntu-trusty
+      - os: ubuntu-xenial
     jobs:
     - name: bosh-dns
       properties:
