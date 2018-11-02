@@ -1,0 +1,8 @@
+---
+
+- type: replace
+  path: /releases/name=uaa
+  value:
+    name: uaa
+    url: ((local-uaa-release-path))
+    version: create
