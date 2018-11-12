@@ -7,6 +7,42 @@ update:
   update_watch_time: 60000
   max_in_flight: 4
 
+addons:
+- name: bosh-dns-aliases
+  jobs:
+  - name: bosh-dns-aliases
+    release: bosh-dns-aliases
+    properties:
+      aliases:
+        - domain: saml.service.uaa.internal
+          targets:
+          - query: 'q-s4'
+            instance_group: saml
+            deployment: uaa
+            network: default
+            domain: bosh
+        - domain: ldap-server.service.uaa.internal
+          targets:
+          - query: 'q-s4'
+            instance_group: ldap-server
+            deployment: uaa
+            network: default
+            domain: bosh
+        - domain: uaa.service.uaa.internal
+          targets:
+          - query: 'q-s4'
+            instance_group: uaa
+            deployment: uaa
+            network: default
+            domain: bosh
+        - domain: uaa-oidc.service.uaa.internal
+          targets:
+          - query: 'q-s4'
+            instance_group: uaa-oidc
+            deployment: uaa
+            network: default
+            domain: bosh
+
 instance_groups:
 - name: uaa
   instances: 1
@@ -123,7 +159,10 @@ releases:
 - name: uaa
   url: https://bosh.io/d/github.com/cloudfoundry/uaa-release
   version: latest
-
+- name: bosh-dns-aliases
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.3
+  version: 0.0.3
+  sha1: b0d0a0350ed87f1ded58b2ebb469acea0e026ccc
 
 stemcells:
 - alias: default
