@@ -1,0 +1,168 @@
+---
+
+# For use with cf-deployment 9427604f01882d1a4d0eb399c11ba4ea091442ac
+# needs cf-deployment manifest_version: v6.3.0
+
+# ADDONS
+- type: remove
+  path: /addons/name=loggregator_agent
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=_.cell.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=auctioneer.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=bbs.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=bits.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=blobstore.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=cc-uploader.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=cloud-controller-ng.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=credhub.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=doppler.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=file-server.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=gorouter.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=locket.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=loggregator-trafficcontroller.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=policy-server.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=reverse-log-proxy.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=routing-api.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=silk-controller.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=ssh-proxy.service.cf.internal
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=tps.service.cf.internal
+
+#seeded databases
+- type: replace
+  path: /instance_groups/name=database/jobs/name=pxc-mysql/properties/seeded_databases
+  value:
+  - name: uaa
+    password: ((uaa_database_password))
+    username: uaa
+
+
+# INSTANCE_GROUPS (needs review)
+- type: remove
+  path: /instance_groups/name=smoke-tests
+- type: remove
+  path: /instance_groups/name=nats
+- type: remove
+  path: /instance_groups/name=adapter
+- type: remove
+  path: /instance_groups/name=diego-api
+- type: remove
+  path: /instance_groups/name=singleton-blobstore
+- type: remove
+  path: /instance_groups/name=api
+- type: remove
+  path: /instance_groups/name=cc-worker
+- type: remove
+  path: /instance_groups/name=router
+- type: remove
+  path: /instance_groups/name=tcp-router
+- type: remove
+  path: /instance_groups/name=scheduler
+- type: remove
+  path: /instance_groups/name=doppler
+- type: remove
+  path: /instance_groups/name=diego-cell
+- type: remove
+  path: /instance_groups/name=log-api
+- type: remove
+  path: /instance_groups/name=credhub
+- type: remove
+  path: /instance_groups/name=rotate-cc-database-key
+
+# jobs
+- type: remove
+  path: /instance_groups/name=database/jobs/name=route_registrar
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=route_registrar
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=statsd_injector
+- type: remove
+  path: /instance_groups/name=backup-restore/jobs/name=bbr-cfnetworkingdb
+- type: remove
+  path: /instance_groups/name=backup-restore/jobs/name=bbr-cloudcontrollerdb
+- type: remove
+  path: /instance_groups/name=backup-restore/jobs/name=bbr-routingdb
+- type: remove
+  path: /instance_groups/name=backup-restore/jobs/name=bbr-credhubdb
+
+# UAA Clients
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients
+  value:
+    admin:
+      authorized-grant-types: 'urn:ietf:params:oauth:grant-type:jwt-bearer,authorization_code,client_credentials,refresh_token,user_token,password,urn:ietf:params:oauth:grant-type:saml2-bearer,implicit'
+      redirect-uri: https://google.com
+      scope: uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,uaa.user,openid
+      authorities: uaa.admin,clients.admin
+      secret: ((uaa_admin_client_secret))
+
+# RELEASES
+- type: remove
+  path: /releases/name=binary-buildpack
+- type: remove
+  path: /releases/name=capi
+- type: remove
+  path: /releases/name=cf-networking
+- type: remove
+  path: /releases/name=cf-smoke-tests
+- type: remove
+  path: /releases/name=cf-syslog-drain
+- type: remove
+  path: /releases/name=cflinuxfs2
+- type: remove
+  path: /releases/name=cflinuxfs3
+- type: remove
+  path: /releases/name=credhub
+- type: remove
+  path: /releases/name=diego
+- type: remove
+  path: /releases/name=dotnet-core-buildpack
+- type: remove
+  path: /releases/name=garden-runc
+- type: remove
+  path: /releases/name=go-buildpack
+- type: remove
+  path: /releases/name=java-buildpack
+- type: remove
+  path: /releases/name=loggregator
+- type: remove
+  path: /releases/name=nats
+- type: remove
+  path: /releases/name=nodejs-buildpack
+- type: remove
+  path: /releases/name=php-buildpack
+- type: remove
+  path: /releases/name=python-buildpack
+- type: remove
+  path: /releases/name=routing
+- type: remove
+  path: /releases/name=ruby-buildpack
+- type: remove
+  path: /releases/name=silk
+- type: remove
+  path: /releases/name=staticfile-buildpack
+- type: remove
+  path: /releases/name=statsd-injector
+- type: remove
+  path: /releases/name=loggregator-agent
+- type: remove
+  path: /releases/name=log-cache
+- type: remove
+  path: /releases/name=cf-cli
