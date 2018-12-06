@@ -47,6 +47,8 @@
 
 #seeded databases
 - type: replace
+# FOR v55
+#  path: /instance_groups/name=database/jobs/name=mysql/properties/cf_mysql/mysql/seeded_databases
   path: /instance_groups/name=database/jobs/name=pxc-mysql/properties/seeded_databases
   value:
   - name: uaa
@@ -87,6 +89,7 @@
   path: /instance_groups/name=rotate-cc-database-key
 
 # jobs
+# NOTE, DO NOT NEED THE NEXT ONE FOR v55
 - type: remove
   path: /instance_groups/name=database/jobs/name=route_registrar
 - type: remove

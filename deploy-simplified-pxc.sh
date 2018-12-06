@@ -17,18 +17,36 @@ fi
 
 echo WORKSPACE_FOLDER="${WORKSPACE_FOLDER}"
 
+# HOW WE DEPLOYED v55
+# Note: PXC is not compatible with UAA v55
+#bosh deploy \
+#  --deployment=${DEPLOYMENT_NAME} \
+#  ${WORKSPACE_FOLDER}/cf-deployment/cf-deployment.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/rename-network-and-deployment.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/use-compiled-releases.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/scale-database-cluster.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/backup-and-restore/enable-backup-restore.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/uaa-deployment/operations/simplify-cf-deployment.yml \
+#  --ops-file=${WORKSPACE_FOLDER}/uaa-deployment/operations/use-local-uaa-release.yml \
+#  --var=local-uaa-release-path=${WORKSPACE_FOLDER}/lts-uaa-release \
+#  --no-redact \
+#  --var=network_name=default \
+#  --var=deployment_name=${DEPLOYMENT_NAME} \
+#  --var=system_domain=${DEPLOYMENT_NAME}.cf-app.com
+
+# HOW WE DEPLOYED v57
 bosh deploy \
   --deployment=${DEPLOYMENT_NAME} \
   ${WORKSPACE_FOLDER}/cf-deployment/cf-deployment.yml \
   --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/rename-network-and-deployment.yml \
   --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/use-compiled-releases.yml \
   --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/use-pxc.yml \
+  --ops-file=${WORKSPACE_FOLDER}/uaa-deployment/operations/scale-pxc.yml \
   --ops-file=${WORKSPACE_FOLDER}/cf-deployment/operations/backup-and-restore/enable-backup-restore.yml \
   --ops-file=${WORKSPACE_FOLDER}/uaa-deployment/operations/simplify-cf-deployment.yml \
   --ops-file=${WORKSPACE_FOLDER}/uaa-deployment/operations/use-local-uaa-release.yml \
-  --var=local-uaa-release-path=${WORKSPACE_FOLDER}/uaa-release \
+  --var=local-uaa-release-path=${WORKSPACE_FOLDER}/lts-uaa-release \
   --no-redact \
   --var=network_name=default \
   --var=deployment_name=${DEPLOYMENT_NAME} \
   --var=system_domain=${DEPLOYMENT_NAME}.cf-app.com
-
