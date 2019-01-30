@@ -44,6 +44,28 @@ addons:
             domain: bosh
 
 instance_groups:
+- name: postgres
+  instances: 1
+  azs: [z1, z2, z3]
+  vm_type: default
+  stemcell: default
+  persistent_disk: 500
+  networks:
+  - name: default
+  jobs:
+  - name: postgres
+    release: postgres
+    provides:
+      postgres: {as: idp_postgres}
+    properties:
+      databases:
+        databases:
+        - name: uaadb
+          citext: true
+        roles:
+        - name: uaaadmin
+          password: admin
+
 - name: uaa
   instances: 1
   azs: [z1, z2, z3]
@@ -53,23 +75,6 @@ instance_groups:
   networks:
   - name: default
   jobs:
-  - name: uaa_postgres
-    release: uaa
-    provides:
-      postgres: {as: idp_postgres}
-    properties:
-      postgres:
-        address: 127.0.0.1
-        port: 5524
-        roles:
-          - tag: admin
-            name: uaaadmin
-            password: admin
-        databases:
-          - tag: uaa
-            name: uaadb
-            citext: true
-
   - name: uaa
     release: uaa
     consumes:
@@ -87,7 +92,7 @@ instance_groups:
         - name: uaadb
           tag: uaa
         db_scheme: postgresql
-        port: 5524
+        port: 5432
         roles:
         - name: uaaadmin
           password: admin
@@ -163,8 +168,12 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-aliases-release?v=0.0.3
   version: 0.0.3
   sha1: b0d0a0350ed87f1ded58b2ebb469acea0e026ccc
+- name: postgres
+  version: "34"
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=34
+  sha1: d4e8993d5052c425692a71ea4ad43e7d9a113a4b
 
 stemcells:
 - alias: default
-  os: ubuntu-trusty
+  os: ubuntu-xenial
   version: "latest"
