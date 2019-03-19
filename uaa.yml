@@ -154,6 +154,7 @@ variables:
     type: certificate
     options:
       ca: uaa_ca
+      common_name: saml-key1-common_name
   - name: uaa_tls
     type: certificate
     options:
