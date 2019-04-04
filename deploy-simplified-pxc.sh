@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eu
+
 DEPLOYMENT_NAME="${1}"
 
 if [[ -z ${DEPLOYMENT_NAME} ]]; then
@@ -9,13 +11,15 @@ fi
 
 echo DEPLOYMENT_NAME="${DEPLOYMENT_NAME}"
 
-WORKSPACE_FOLDER="${2}"
+WORKSPACE_FOLDER="${2:-}"
 
 if [[ -z ${WORKSPACE_FOLDER} ]]; then
     WORKSPACE_FOLDER=/Users/pivotal/workspace
 fi
 
 echo WORKSPACE_FOLDER="${WORKSPACE_FOLDER}"
+
+bosh update-runtime-config "${WORKSPACE_FOLDER}/bosh-deployment/runtime-configs/dns.yml"
 
 bosh deploy \
   --deployment=${DEPLOYMENT_NAME} \
